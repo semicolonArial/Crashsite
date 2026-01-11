@@ -1,0 +1,39 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level1.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "level1.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1028,
+                "y": 654
+            }
+        },
+        "tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Data/Programmering/Crash Site/Games/Geometry Dash/maps",
+    "last.imagePath": "C:/Data/Programmering/Crash Site/Games/Geometry Dash/maps",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "JavaScript-kartfiler (*.js)",
+    "map.lastUsedFormat": "js",
+    "openFiles": [
+        "level1.tmx",
+        "tiles.tsx"
+    ],
+    "project": "level1.tiled-project",
+    "recentFiles": [
+        "tiles.tsx",
+        "level1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
