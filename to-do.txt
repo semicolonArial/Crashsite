@@ -6,9 +6,13 @@ x Make orbs!
 x Make pads!
 x Make rotation!
 x Bilde av BennyTheOverlord!
+- Add mouse button!
 - FlappyBird?
 - Ship?
 - Goal?
+- Coins?
+- Level Select!
+- Harmonica music!
 
 
 

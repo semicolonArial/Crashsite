@@ -1,7 +1,7 @@
-function isColliding(A, B) {
+function isColliding(A, B, offset=0) {
     return (
-        isCollidingX(A, B) && 
-        isCollidingY(A, B)
+        isCollidingX(A, B, offset) && 
+        isCollidingY(A, B, offset)
     )
 }
 
@@ -12,9 +12,9 @@ function isCollidingX(A, B, offset=0) {
     )
 }
 
-function isCollidingY(A, B) {
+function isCollidingY(A, B, offset=0) {
     return (
-        A.pos.y + A.height >= B.pos.y &&
-        A.pos.y <= B.pos.y + B.height
+        A.pos.y + A.height - offset >= B.pos.y &&
+        A.pos.y + offset<= B.pos.y + B.height
     )
 }

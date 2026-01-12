@@ -12,8 +12,8 @@
             "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1028,
-                "y": 654
+                "x": 8050,
+                "y": 812
             }
         },
         "tiles.tsx": {
@@ -27,13 +27,12 @@
     "map.lastUsedExportFilter": "JavaScript-kartfiler (*.js)",
     "map.lastUsedFormat": "js",
     "openFiles": [
-        "level1.tmx",
-        "tiles.tsx"
+        "level1.tmx"
     ],
     "project": "level1.tiled-project",
     "recentFiles": [
-        "tiles.tsx",
-        "level1.tmx"
+        "level1.tmx",
+        "tiles.tsx"
     ],
     "tileset.lastUsedFormat": "tsx"
 }

@@ -116,8 +116,7 @@ class FloorBlock {
     }
     checkYCollision() {
         if (isColliding(this, P)) {
-            if ( 
-                P.pos.y + P.height > this.pos.y + this.height) {
+            if (P.pos.y + P.height >= this.pos.y + this.height) {
                 P.alive = false
             } else if (P.vel.y > 0) {
                 P.vel.y = 0
@@ -174,7 +173,7 @@ class SpikeBlock {
         ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
     }
     checkYCollision() {
-        if (isColliding(this, P)) {
+        if (isColliding(this, P, 30)) {
             P.alive = false
         }
     }
