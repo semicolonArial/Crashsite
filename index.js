@@ -2,13 +2,13 @@ const c = document.getElementById("main")
 const ctx = c.getContext("2d")
 c.style.border = "1px solid black"
 c.width = 29000
-c.height = 6000
+c.height = 3000
 ctx.imageSmoothingEnabled = false;
 const view = document.getElementById("viewport")
 const vtx = view.getContext("2d")
 
 view.style.border = "1px solid black"
-view.width = 1200
+view.width = 1500
 view.height = 800
 offset = {
     x: 100,
@@ -20,20 +20,29 @@ const P = new Player({
     pos: start_pos
 })
 
-let lastDrawTime = 0;
+let lastUpdate = performance.now();
 window.requestAnimationFrame(animate);
 
-function animate(timestamp) {
-    const viewX = P.pos.x - offset.x;
-    const viewY = P.pos.y - offset.y;
+function animate() {
+    const now = performance.now();
+    const deltaTime = now - lastUpdate;
+    
+    // Update every second (1000 milliseconds)
+    if (deltaTime >= 1) {
+        lastUpdate = now;
+        console.log(deltaTime)
 
-    ctx.clearRect(viewX, viewY, view.width, view.height);
-    P.update();
-    Blocks.forEach(Block => Block.update());
+        const viewX = P.pos.x - offset.x;
+        const viewY = P.pos.y - offset.y;
 
-    // Only update the viewport if it has moved significantly
-    vtx.clearRect(0, 0, view.width, view.height);
-    vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
+        // ctx.clearRect(viewX, viewY, view.width, view.height);
+        P.update();
+        Blocks.forEach(Block => Block.update());
+
+        vtx.clearRect(0, 0, view.width, view.height);
+        vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
+    }
+    
     if (P.alive) {
         window.requestAnimationFrame(animate);
     }

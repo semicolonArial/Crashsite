@@ -101,7 +101,7 @@ class FloorBlock {
         this.height = height
     }
     update() {
-        if (this.pos.x + this.width > P.pos.x - offset.x &&
+        if (this.pos.x + this.width +100 > P.pos.x - offset.x &&
             this.pos.x < P.pos.x - offset.x + view.width &&
             this.pos.y + this.height > P.pos.y - offset.y &&
             this.pos.y < P.pos.y - offset.y + view.height
