@@ -2,11 +2,10 @@ const c = document.getElementById("main")
 const ctx = c.getContext("2d")
 c.style.border = "1px solid black"
 c.width = 29000
-c.height = 3000
-ctx.imageSmoothingEnabled = false;
+c.height = 8000
+
 const view = document.getElementById("viewport")
 const vtx = view.getContext("2d")
-
 view.style.border = "1px solid black"
 view.width = 1500
 view.height = 800
@@ -15,10 +14,9 @@ offset = {
     y: 300,
 }
 
-
-const P = new Player({
-    pos: start_pos
-})
+const P = new Player()
+const level_select = document.getElementById("level_select")
+loadLevel(level_select.selectedOptions[0])
 
 window.requestAnimationFrame(animate);
 
@@ -32,27 +30,40 @@ function animate() {
     lastUpdate = now;
 
     accumulatedTime += deltaTime;
-
     while (accumulatedTime >= FIXED_TIME_STEP) {
         accumulatedTime -= FIXED_TIME_STEP;
 
         const viewX = P.pos.x - offset.x;
         const viewY = P.pos.y - offset.y;
 
-        ctx.clearRect(viewX, viewY, view.width, view.height);
-        P.update();
-        Blocks.forEach(Block => Block.update());
+        ctx.clearRect(viewX, viewY, 200, view.height);
+
+        // Handle player respawn
+        if (!P.alive) {
+            P.respawn(start_pos)
+        } else {
+            P.update();
+            Blocks.forEach(Block => Block.update());
+        }
 
         vtx.clearRect(0, 0, view.width, view.height);
         vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
     }
 
-    if (P.alive) {
-        window.requestAnimationFrame(animate);
-    }
+    window.requestAnimationFrame(animate);
 }
 
+function win() {
+    alert('"Lowkey litt weird ass, bro" \n - Benjamin"')
+    level_select.selectedOptions[0].style = "color: green"
+    P.respawn(start_pos)
+}
 
+function loadLevel(selected_option) {
+    level_to_load = selected_option.value
+    makeLevel(level_to_load)
+    P.respawn(start_pos)
+}
 window.addEventListener("keydown", (e) => {
     switch (event.key) {
         case "w":
@@ -70,6 +81,13 @@ window.addEventListener("keyup", (e) => {
     switch (event.key) {
         case "w":
             P.input.press.jump = false
+        case " ":
+            P.input.press.jump = false
+            break
+        case "ArrowUp":
+            P.input.press.jump = false
+            break
+    
     }
 })
 view.addEventListener("mousedown", (e) => {

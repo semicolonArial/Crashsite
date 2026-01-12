@@ -1,7 +1,10 @@
 class Player {
-    constructor({pos}) {
+    constructor() {
         this.alive = true
-        this.pos = pos
+        this.pos = {
+            x:0,
+            y:0
+        }
         this.vel = {
             x: 10,
             y: 0,
@@ -33,7 +36,7 @@ class Player {
         this.fall()
         // this.checkYCollision()
         this.rotate()
-        this.debugJumpHeight()
+        // this.debugJumpHeight()
         
         this.handleInput()
         // this.jump()
@@ -52,15 +55,7 @@ class Player {
     move() {
         this.pos.x += this.vel.x
     }
-    debugJumpHeight() {
-        if (this.start_height && this.grounded) {
-            console.log(this.pos.x - this.start_height)
-            this.start_height = false
-        }
-        
-    }
     jump(power) {
-        this.start_height = this.pos.x
         this.vel.y = -power
     }
     fall() {
@@ -92,6 +87,12 @@ class Player {
             this.start_x = this.pos.x
         }
     }
+    respawn(pos) {
+        this.pos.x = pos.x
+        this.pos.y = pos.y// Reset to starting x position
+        this.vel.y = 0; // Reset vertical velocity
+        this.alive = true; // Set alive state to true
+    }
 }
 
 class FloorBlock {
@@ -101,7 +102,7 @@ class FloorBlock {
         this.height = height
     }
     update() {
-        if (this.pos.x + this.width +100 > P.pos.x - offset.x &&
+        if (this.pos.x + this.width+100 > P.pos.x - offset.x &&
             this.pos.x < P.pos.x - offset.x + view.width &&
             this.pos.y + this.height > P.pos.y - offset.y &&
             this.pos.y < P.pos.y - offset.y + view.height
@@ -205,6 +206,32 @@ class OrbBlock {
                 P.jump(P.jump_power)
             }
             
+        }
+    }
+}
+class GoalBlock {
+    constructor({pos, width, height}) {
+        this.pos = pos
+        this.width = width
+        this.height = height
+    }
+    update() {
+        if (this.pos.x + this.width > P.pos.x - offset.x &&
+            this.pos.x < P.pos.x - offset.x + view.width &&
+            this.pos.y + this.height > P.pos.y - offset.y &&
+            this.pos.y < P.pos.y - offset.y + view.height
+        ) {
+            this.checkYCollision()
+            this.draw()
+        }
+    }
+    draw() {
+        ctx.fillStyle = "green"
+        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+    }
+    checkYCollision() {
+        if (isColliding(this, P)) {
+            win()
         }
     }
 }

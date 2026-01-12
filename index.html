@@ -9,11 +9,18 @@
 <body>
 	<canvas id="main" hidden></canvas>
     <canvas id="viewport"></canvas>
-    <script src="./maps/level1.js"></script>
-	<script src="utils.js"></script>
-	<script src="classes.js"></script>
-	<script src="collisions.js"></script>
-	<script src="index.js"></script>
+    <br>
+    <select name="levels" id="level_select" onchange="loadLevel(this)"onload="loadLevel(this)">
+        <option value="level1">1 - Benjamero Weirdness</option>
+        <option value="level2">2 - Føkk deg og bare deg, personlig</option>
+    </select>
+    
+<script src="./maps/level1.js"></script>
+<script src="./maps/level2.js"></script>
+<script src="utils.js"></script>
+<script src="classes.js"></script>
+<script src="collisions.js"></script>
+<script src="index.js"></script>
 	
 </body>
 </html>

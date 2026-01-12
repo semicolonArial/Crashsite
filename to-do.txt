@@ -1,4 +1,4 @@
-o Make a map!
+x Make a map!
 x Make camera!
 x Make nice jump and speed!
 x Make death!
@@ -6,13 +6,12 @@ x Make orbs!
 x Make pads!
 x Make rotation!
 x Bilde av BennyTheOverlord!
-- Add mouse button!
+x Add mouse button!
+x Respawn
+x Level Select!
+- Goal?
+- Harmonica music!
 - FlappyBird?
 - Ship?
-- Goal?
 - Coins?
-- Level Select!
-- Harmonica music!
-
-
-
+- Cookies for level completion!
