@@ -20,29 +20,33 @@ const P = new Player({
     pos: start_pos
 })
 
-let lastUpdate = performance.now();
 window.requestAnimationFrame(animate);
+
+const FIXED_TIME_STEP = 15; // Milliseconds for each update
+let lastUpdate = performance.now();
+let accumulatedTime = 0;
 
 function animate() {
     const now = performance.now();
     const deltaTime = now - lastUpdate;
-    
-    // Update every second (1000 milliseconds)
-    if (deltaTime >= 1) {
-        lastUpdate = now;
-        console.log(deltaTime)
+    lastUpdate = now;
+
+    accumulatedTime += deltaTime;
+
+    while (accumulatedTime >= FIXED_TIME_STEP) {
+        accumulatedTime -= FIXED_TIME_STEP;
 
         const viewX = P.pos.x - offset.x;
         const viewY = P.pos.y - offset.y;
 
-        // ctx.clearRect(viewX, viewY, view.width, view.height);
+        ctx.clearRect(viewX, viewY, view.width, view.height);
         P.update();
         Blocks.forEach(Block => Block.update());
 
         vtx.clearRect(0, 0, view.width, view.height);
         vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
     }
-    
+
     if (P.alive) {
         window.requestAnimationFrame(animate);
     }
@@ -55,6 +59,9 @@ window.addEventListener("keydown", (e) => {
             P.input.press.jump = true
             break
         case " ":
+            P.input.press.jump = true
+            break
+        case "ArrowUp":
             P.input.press.jump = true
             break
     }
