@@ -63,11 +63,14 @@ class Player {
         if (this.vel.y > this.max_fall_speed) this.vel.y = this.max_fall_speed
     }
     draw() {
-        ctx.save();
-            ctx.translate(this.pos.x+this.width/2, this.pos.y+this.height/2)
-            ctx.rotate(this.degrees*(Math.PI/180))
-            ctx.drawImage(this.sprite,-this.width/2, -this.height/2, this.width, this.height)
-        ctx.restore();
+        vtx.save();
+            // vtx.translate(this.pos.x+this.width/2, this.pos.y+this.height/2)
+            // vtx.rotate(this.degrees*(Math.PI/180))
+            // vtx.drawImage(this.sprite,-this.width/2, -this.height/2, this.width, this.height)
+            vtx.translate(100+this.width/2, 300+this.height/2)
+            vtx.rotate(this.degrees*(Math.PI/180))
+            vtx.drawImage(this.sprite,-this.width/2, -this.height/2,  this.width, this.height)
+        vtx.restore();
     }
     handleInput() {
         if (this.input.press.jump &&

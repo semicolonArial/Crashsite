@@ -33,11 +33,9 @@ function animate() {
     while (accumulatedTime >= FIXED_TIME_STEP) {
         accumulatedTime -= FIXED_TIME_STEP;
 
-        const viewX = P.pos.x - offset.x;
-        const viewY = P.pos.y - offset.y;
-
-        ctx.clearRect(viewX, viewY, 200, view.height);
-
+        const viewX = Math.floor(P.pos.x - offset.x);
+        const viewY = Math.floor(P.pos.y - offset.y);
+        vtx.clearRect(0, 0, view.width, view.height);
         // Handle player respawn
         if (!P.alive) {
             P.respawn(start_pos)
@@ -46,7 +44,6 @@ function animate() {
             Blocks.forEach(Block => Block.update());
         }
 
-        vtx.clearRect(0, 0, view.width, view.height);
         vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
     }
 
