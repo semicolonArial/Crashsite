@@ -3,15 +3,12 @@ const vtx = view.getContext("2d")
 view.style.border = "1px solid black"
 view.width = 1500
 view.height = 800
+view.style = "cursor: none;"
 offset = {
     x: 100,
     y: 300,
 }
 const music = document.createElement("audio");
-
-
-
-// myAudio.pause();
 
 const P = new Player()
 const level_select = document.getElementById("level_select")
@@ -25,17 +22,16 @@ let accumulatedTime = 0;
 
 function animate() {
     const now = performance.now();
-    const deltaTime = now - lastUpdate;
+	let deltaTime;
+	if (now - lastUpdate > 50) deltaTime = 15
+    else deltaTime = now - lastUpdate;
     lastUpdate = now;
 
     accumulatedTime += deltaTime;
     while (accumulatedTime >= FIXED_TIME_STEP) {
         accumulatedTime -= FIXED_TIME_STEP;
-        
-
-        
-        vtx.clearRect(0, 0, view.width, view.height);
-
+		vtx.fillStyle = "white"
+        vtx.fillRect(0, 0, view.width, view.height);
         if (!P.alive) {
             P.respawn(start_pos)
         } else {
@@ -44,8 +40,7 @@ function animate() {
                 vtx.translate(-P.pos.x + view.width / 2, -P.pos.y + view.height / 2);
                 Blocks.forEach(Block => Block.update());
             vtx.restore();
-            }
-       
+		}
     }
 
     window.requestAnimationFrame(animate);
@@ -63,6 +58,9 @@ function loadLevel(selected_option) {
     music.src = "./snd/"+selected_option.value+".mp3";
     music.play(); 
     P.respawn(start_pos)
+}
+function enableFullscreen() {
+	view.requestFullscreen()
 }
 window.addEventListener("keydown", (e) => {
     switch (event.key) {
@@ -96,3 +94,4 @@ view.addEventListener("mousedown", (e) => {
 view.addEventListener("mouseup", (e) => {
     P.input.press.jump = false
 })
+
