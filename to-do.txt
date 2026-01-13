@@ -9,9 +9,11 @@ x Bilde av BennyTheOverlord!
 x Add mouse button!
 x Respawn
 x Level Select!
-- Goal?
-- Harmonica music!
+x Goal?
+x Harmonica music!
+- Have it reset lastUpdate on window focus
 - FlappyBird?
 - Ship?
 - Coins?
 - Cookies for level completion!
+
