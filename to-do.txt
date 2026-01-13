@@ -11,7 +11,9 @@ x Respawn
 x Level Select!
 x Goal?
 x Harmonica music!
-- Have it reset lastUpdate on window focus
+x Complete color selection
+- Skins for coins!
+- Portals
 - FlappyBird?
 - Ship?
 - Coins?

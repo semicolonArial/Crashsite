@@ -125,12 +125,12 @@ class Block {
     }
 }
 class FloorBlock extends Block {
-    constructor({pos}) {
+    constructor({pos, color}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
-            color: "black",
+            color: color,
         })
     }
     checkYCollision() {
@@ -147,17 +147,18 @@ class FloorBlock extends Block {
     }
 }
 class PadBlock extends Block{
-    constructor({pos}) {
+    constructor({pos, jump_power}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
             color: "yellow",
         })
+        this.jump_power = jump_power
     }
     checkYCollision() {
         if (isColliding(this, P)) {
-            P.jump(30)
+            P.jump(this.jump_power)
         }
     }
 }
@@ -177,19 +178,20 @@ class SpikeBlock extends Block{
     }
 }
 class OrbBlock extends Block{
-    constructor({pos}) {
+    constructor({pos, jump_power}) {
         super({
             pos: pos,
             width: 40,
             height: 40,
             color: "yellow",
         })
+        this.jump_power = jump_power
     }
     checkYCollision() {
         if (isColliding(this, P)) {
             if (P.input.press.jump) {
                 P.vel.y = 0
-                P.jump(P.jump_power)
+                P.jump(this.jump_power)
             }
             
         }
