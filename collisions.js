@@ -664,6 +664,18 @@ function makeLevel(level) {
                         jump_power: 32,
                     })
                 )
+            } else if (value == 145) {
+                Blocks.push(
+                    new PortalBlock({
+                        pos: {
+                            x: x*block_size,
+                            y: y*block_size+offset.y-block_size
+                        },
+                        width: block_size,
+                        height: block_size*2,
+                        color: "orange",
+                    })
+                )
             } else if (value == 163) {
                 start_pos = {
                     x: x*block_size,

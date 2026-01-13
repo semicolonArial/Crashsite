@@ -29,8 +29,7 @@ class Player {
         this.sprite = new Image()
         this.sprite.src = "./img/ben.jpg"
     }
-    update() {
-        
+    update() {   
         this.draw()
         this.move()
         this.fall()
@@ -59,11 +58,20 @@ class Player {
         this.pos.x += this.vel.x
     }
     jump(power) {
-        this.vel.y = -power
+        if (this.fall_speed > 0) {
+            this.vel.y = -power
+        } else this.vel.y = power
     }
     fall() {
-        this.vel.y += this.fall_speed
-        if (this.vel.y > this.max_fall_speed) this.vel.y = this.max_fall_speed
+        if (this.fall_speed > 0) {
+             this.vel.y += this.fall_speed
+             if (this.vel.y > this.max_fall_speed) this.vel.y = this.max_fall_speed
+        } else {
+            this.vel.y += this.fall_speed
+            if (this.vel.y < -this.max_fall_speed) this.vel.y = -this.max_fall_speed
+        }
+       
+        
     }
     draw() {
         vtx.save();
@@ -136,17 +144,28 @@ class FloorBlock extends Block {
     checkYCollision() {
 
         if (isColliding(this, P)) {
-            if (P.pos.y + P.height >= this.pos.y + this.height) {
-                P.alive = false
-            } else if (P.vel.y > 0) {
-                P.vel.y = 0
-                P.pos.y = this.pos.y - P.height
-                P.grounded = true
+            if (P.fall_speed > 0) {
+                if (P.pos.y + P.height >= this.pos.y + this.height) {
+                    P.alive = false
+                } else if (P.vel.y > 0) {
+                    P.vel.y = 0
+                    P.pos.y = this.pos.y - P.height
+                    P.grounded = true
+                }
+            } else {
+                if (P.pos.y + P.height <= this.pos.y + this.height) {
+                    P.alive = false
+                    console.log("killed 'em!")
+                } else if (P.vel.y < 0) {
+                    P.vel.y = 0
+                    P.pos.y = this.pos.y + P.height
+                    P.grounded = true
+                }
             }
         }
     }
 }
-class PadBlock extends Block{
+class PadBlock extends Block {
     constructor({pos, jump_power}) {
         super({
             pos: pos,
@@ -162,7 +181,7 @@ class PadBlock extends Block{
         }
     }
 }
-class SpikeBlock extends Block{
+class SpikeBlock extends Block {
     constructor({pos}) {
         super({
             pos: pos,
@@ -177,7 +196,7 @@ class SpikeBlock extends Block{
         }
     }
 }
-class OrbBlock extends Block{
+class OrbBlock extends Block {
     constructor({pos, jump_power}) {
         super({
             pos: pos,
@@ -197,7 +216,7 @@ class OrbBlock extends Block{
         }
     }
 }
-class GoalBlock extends Block{
+class GoalBlock extends Block {
     constructor({pos}) {
         super({
             pos: pos,
@@ -209,6 +228,22 @@ class GoalBlock extends Block{
     checkYCollision() {
         if (isColliding(this, P)) {
             win()
+        }
+    }
+}
+class PortalBlock extends Block {
+    constructor({pos, color}) {
+        super({
+            pos: pos,
+            width: 80,
+            height: 160,
+            color: color,
+        })
+    }
+    checkYCollision() {
+        if (isColliding(this, P)) {
+            P.fall_speed *= -1
+            P.pos.y -= 3
         }
     }
 }
