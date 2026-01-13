@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level1.tmx",
+    "activeFile": "level1.js",
     "expandedProjectPaths": [
         "."
     ],
@@ -45,10 +45,11 @@
     "map.lastUsedFormat": "js",
     "map.width": 300,
     "openFiles": [
-        "level1.tmx"
+        "level1.js"
     ],
     "project": "level1.tiled-project",
     "recentFiles": [
+        "level1.js",
         "level2.js",
         "level1.tmx",
         "tiles.tsx"

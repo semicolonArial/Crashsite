@@ -1,9 +1,3 @@
-const c = document.getElementById("main")
-const ctx = c.getContext("2d")
-c.style.border = "1px solid black"
-c.width = 29000
-c.height = 8000
-
 const view = document.getElementById("viewport")
 const vtx = view.getContext("2d")
 view.style.border = "1px solid black"
@@ -13,6 +7,11 @@ offset = {
     x: 100,
     y: 300,
 }
+const music = document.createElement("audio");
+
+
+
+// myAudio.pause();
 
 const P = new Player()
 const level_select = document.getElementById("level_select")
@@ -32,19 +31,21 @@ function animate() {
     accumulatedTime += deltaTime;
     while (accumulatedTime >= FIXED_TIME_STEP) {
         accumulatedTime -= FIXED_TIME_STEP;
+        
 
-        const viewX = Math.floor(P.pos.x - offset.x);
-        const viewY = Math.floor(P.pos.y - offset.y);
+        
         vtx.clearRect(0, 0, view.width, view.height);
-        // Handle player respawn
+
         if (!P.alive) {
             P.respawn(start_pos)
         } else {
             P.update();
-            Blocks.forEach(Block => Block.update());
-        }
-
-        vtx.drawImage(c, viewX, viewY, view.width, view.height, 0, 0, view.width, view.height);
+            vtx.save();
+                vtx.translate(-P.pos.x + view.width / 2, -P.pos.y + view.height / 2);
+                Blocks.forEach(Block => Block.update());
+            vtx.restore();
+            }
+       
     }
 
     window.requestAnimationFrame(animate);
@@ -59,6 +60,8 @@ function win() {
 function loadLevel(selected_option) {
     level_to_load = selected_option.value
     makeLevel(level_to_load)
+    music.src = "./snd/"+selected_option.value+".mp3";
+    music.play(); 
     P.respawn(start_pos)
 }
 window.addEventListener("keydown", (e) => {

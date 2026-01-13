@@ -43,6 +43,9 @@ class Player {
         
         this.grounded = false
         this.pos.y += this.vel.y
+        this.pos.y = Math.round(this.pos.y);
+        this.pos.x = Math.round(this.pos.x);
+
         
     }
     rotate() {
@@ -64,10 +67,7 @@ class Player {
     }
     draw() {
         vtx.save();
-            // vtx.translate(this.pos.x+this.width/2, this.pos.y+this.height/2)
-            // vtx.rotate(this.degrees*(Math.PI/180))
-            // vtx.drawImage(this.sprite,-this.width/2, -this.height/2, this.width, this.height)
-            vtx.translate(100+this.width/2, 300+this.height/2)
+            vtx.translate(offset.x+this.width/2, offset.y+this.height/2)
             vtx.rotate(this.degrees*(Math.PI/180))
             vtx.drawImage(this.sprite,-this.width/2, -this.height/2,  this.width, this.height)
         vtx.restore();
@@ -85,7 +85,6 @@ class Player {
             this.start_x = this.pos.x
         }
         if (performance.now() - this.start_time > 1000) {
-            console.log(this.pos.x - this.start_x)
             this.start_time = performance.now()
             this.start_x = this.pos.x
         }
@@ -95,30 +94,47 @@ class Player {
         this.pos.y = pos.y// Reset to starting x position
         this.vel.y = 0; // Reset vertical velocity
         this.alive = true; // Set alive state to true
+        music.currentTime = 0
     }
 }
 
-class FloorBlock {
-    constructor({pos, width, height}) {
+class Block {
+    constructor({pos, width, height, color}) {
         this.pos = pos
         this.width = width
         this.height = height
+        this.color = color
     }
-    update() {
-        if (this.pos.x + this.width+100 > P.pos.x - offset.x &&
+    isVisible() {
+        return (
+            this.pos.x + this.width > P.pos.x - offset.x &&
             this.pos.x < P.pos.x - offset.x + view.width &&
             this.pos.y + this.height > P.pos.y - offset.y &&
             this.pos.y < P.pos.y - offset.y + view.height
-        ) {
+        )
+    }
+    update() {
+        if (this.isVisible()) {
             this.checkYCollision()
             this.draw()
         }
     }
     draw() {
-        ctx.fillStyle = "black"
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+        vtx.fillStyle = this.color
+        vtx.fillRect(this.pos.x - 650, this.pos.y - 100, this.width, this.height)
+    }
+}
+class FloorBlock extends Block {
+    constructor({pos}) {
+        super({
+            pos: pos,
+            width: 80,
+            height: 80,
+            color: "black",
+        })
     }
     checkYCollision() {
+
         if (isColliding(this, P)) {
             if (P.pos.y + P.height >= this.pos.y + this.height) {
                 P.alive = false
@@ -130,25 +146,14 @@ class FloorBlock {
         }
     }
 }
-class PadBlock {
-    constructor({pos, width, height}) {
-        this.pos = pos
-        this.width = width
-        this.height = height
-    }
-    update() {
-        if (this.pos.x + this.width > P.pos.x - offset.x &&
-            this.pos.x < P.pos.x - offset.x + view.width &&
-            this.pos.y + this.height > P.pos.y - offset.y &&
-            this.pos.y < P.pos.y - offset.y + view.height
-        ) {
-            this.checkYCollision()
-            this.draw()
-        }
-    }
-    draw() {
-        ctx.fillStyle = "yellow"
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+class PadBlock extends Block{
+    constructor({pos}) {
+        super({
+            pos: pos,
+            width: 80,
+            height: 80,
+            color: "yellow",
+        })
     }
     checkYCollision() {
         if (isColliding(this, P)) {
@@ -156,25 +161,14 @@ class PadBlock {
         }
     }
 }
-class SpikeBlock {
-    constructor({pos, width, height}) {
-        this.pos = pos
-        this.width = width
-        this.height = height
-    }
-    update() {
-        if (this.pos.x + this.width > P.pos.x - offset.x &&
-            this.pos.x < P.pos.x - offset.x + view.width &&
-            this.pos.y + this.height > P.pos.y - offset.y &&
-            this.pos.y < P.pos.y - offset.y + view.height
-        ) {
-            this.checkYCollision()
-            this.draw()
-        }
-    }
-    draw() {
-        ctx.fillStyle = "red"
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+class SpikeBlock extends Block{
+    constructor({pos}) {
+        super({
+            pos: pos,
+            width: 80,
+            height: 80,
+            color: "red",
+        })
     }
     checkYCollision() {
         if (isColliding(this, P, 30)) {
@@ -182,25 +176,14 @@ class SpikeBlock {
         }
     }
 }
-class OrbBlock {
-    constructor({pos, width, height}) {
-        this.pos = pos
-        this.width = width
-        this.height = height
-    }
-    update() {
-        if (this.pos.x + this.width > P.pos.x - offset.x &&
-            this.pos.x < P.pos.x - offset.x + view.width &&
-            this.pos.y + this.height > P.pos.y - offset.y &&
-            this.pos.y < P.pos.y - offset.y + view.height
-        ) {
-            this.checkYCollision()
-            this.draw()
-        }
-    }
-    draw() {
-        ctx.fillStyle = "yellow"
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+class OrbBlock extends Block{
+    constructor({pos}) {
+        super({
+            pos: pos,
+            width: 40,
+            height: 40,
+            color: "yellow",
+        })
     }
     checkYCollision() {
         if (isColliding(this, P)) {
@@ -212,25 +195,14 @@ class OrbBlock {
         }
     }
 }
-class GoalBlock {
-    constructor({pos, width, height}) {
-        this.pos = pos
-        this.width = width
-        this.height = height
-    }
-    update() {
-        if (this.pos.x + this.width > P.pos.x - offset.x &&
-            this.pos.x < P.pos.x - offset.x + view.width &&
-            this.pos.y + this.height > P.pos.y - offset.y &&
-            this.pos.y < P.pos.y - offset.y + view.height
-        ) {
-            this.checkYCollision()
-            this.draw()
-        }
-    }
-    draw() {
-        ctx.fillStyle = "green"
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height)
+class GoalBlock extends Block{
+    constructor({pos}) {
+        super({
+            pos: pos,
+            width: 80,
+            height: 80,
+            color: "green",
+        })
     }
     checkYCollision() {
         if (isColliding(this, P)) {
