@@ -108,7 +108,9 @@ class Player {
 }
 
 class Ufo extends Player {
-	jump()
+	jump() {
+        
+    }
 }
 
 class Block {
