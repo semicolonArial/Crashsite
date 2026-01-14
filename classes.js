@@ -1,9 +1,9 @@
 class Player {
-    constructor() {
+    constructor(pos={x: start_pos.x, y: start_pos.y}) {
         this.alive = true
         this.pos = {
-            x: start_pos.x,
-            y: start_pos.y,
+            x: start_pos.x, 
+            y: start_pos.y
         }
         this.vel = {
             x: 10,
@@ -32,19 +32,14 @@ class Player {
     update() {   
         this.draw()
         this.move()
+        this.rotate() 
         this.fall()
-        // this.checkYCollision()
-        this.rotate()
-        // this.debugJumpHeight()
-        
         this.handleInput()
-        // this.jump()
-        
         this.grounded = false
         this.pos.y += this.vel.y
         this.pos.y = Math.round(this.pos.y);
         this.pos.x = Math.round(this.pos.x);
-
+        console.log(this.input.hold.jump)
         
     }
     rotate() {
@@ -57,10 +52,12 @@ class Player {
     move() {
         this.pos.x += this.vel.x
     }
-    jump(power) {
-        if (this.fall_speed > 0) {
-            this.vel.y = -power
-        } else this.vel.y = power
+    jump(power=this.jump_power) {
+        if (this.grounded) {
+            if (this.fall_speed > 0) {
+                this.vel.y = -power
+            } else this.vel.y = power
+        }
     }
     fall() {
         if (this.fall_speed > 0) {
@@ -81,9 +78,8 @@ class Player {
         vtx.restore();
     }
     handleInput() {
-        if (this.input.press.jump &&
-            this.grounded) {
-            this.jump(this.jump_power)
+        if (this.input.press.jump){
+            this.jump()
             this.input.press.jump = false
         }
     }
@@ -106,9 +102,48 @@ class Player {
 		
     }
 }
-
+class Cube extends Player{
+    constructor(pos) {
+        super()
+        this.sprite.src = "./img/ben.jpg"
+        this.pos = pos
+    }
+}
 class Ufo extends Player {
-	jump() {
+    constructor(pos) {
+        super()
+        this.sprite.src = "./img/ufo.jpg"
+        this.pos = pos
+        this.jump_power = 20
+    }
+	jump(power=this.jump_power) {
+        if (this.fall_speed > 0) {
+            this.vel.y = -power
+        } else this.vel.y = power
+    }
+    rotate() {
+        
+    }
+}
+class Ship extends Player {
+    constructor(pos) {
+        super()
+        this.sprite.src = "./img/ship.jpg"
+        this.pos = pos
+        this.jump_power = 7
+        this.fall_speed
+    }
+	jump(power=this.jump_power) {
+        if (this.fall_speed > 0) {
+            this.vel.y = -power
+        } else this.vel.y = power
+    }
+    handleInput() {
+        if (this.input.hold.jump){
+            this.jump()
+        }
+    }
+    rotate() {
         
     }
 }
@@ -164,7 +199,6 @@ class FloorBlock extends Block {
             } else {
                 if (P.pos.y + P.height <= this.pos.y + this.height) {
                     P.alive = false
-                    console.log("killed 'em!")
                 } else if (P.vel.y < 0) {
                     P.vel.y = 0
                     P.pos.y = this.pos.y + P.height
@@ -175,12 +209,12 @@ class FloorBlock extends Block {
     }
 }
 class PadBlock extends Block {
-    constructor({pos, jump_power}) {
+    constructor({pos, jump_power, color}) {
         super({
             pos: pos,
             width: 80,
-            height: 80,
-            color: "yellow",
+            height: 20,
+            color: color,
         })
         this.jump_power = jump_power
     }
@@ -191,12 +225,12 @@ class PadBlock extends Block {
     }
 }
 class SpikeBlock extends Block {
-    constructor({pos}) {
+    constructor({pos, color}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
-            color: "red",
+            color: color,
         })
     }
     checkYCollision() {
@@ -206,12 +240,12 @@ class SpikeBlock extends Block {
     }
 }
 class OrbBlock extends Block {
-    constructor({pos, jump_power}) {
+    constructor({pos, jump_power, color}) {
         super({
             pos: pos,
             width: 40,
             height: 40,
-            color: "yellow",
+            color: color,
         })
         this.jump_power = jump_power
     }
@@ -240,7 +274,6 @@ class GoalBlock extends Block {
         }
     }
 }
-
 class PortalBlock extends Block {
     constructor({pos, action, color}) {
         super({
@@ -251,16 +284,40 @@ class PortalBlock extends Block {
         })
 		this.actions = {
 			"invertGravity": this.invertGravity,
+            "setCube": this.setCube,
+            "setUfo": this.setUfo,
+            "setShip": this.setShip,
 		}
 		this.actionOnTouch = this.actions[action]
     }
 	invertGravity() {
-		console.log(P.fall_speed)
 		if (P.fall_speed > 0) {
 			P.pos.y -= 3;
 		}
 		P.fall_speed *= -1
 	}
+    setCube() {
+        const pos = {
+            x: P.pos.x,
+            y: P.pos.y,
+        }
+        P = new Cube(pos)
+    }
+    setUfo() {
+        const pos = {
+            x: P.pos.x,
+            y: P.pos.y,
+        }
+        P = new Ufo(pos)
+    }
+    setShip() {
+        const pos = {
+            x: P.pos.x,
+            y: P.pos.y,
+        }
+        
+        P = new Ship(pos)
+    }
     checkYCollision() {
         if (isColliding(this, P) && !this.touched) {
 			this.actionOnTouch()
