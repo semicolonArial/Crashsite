@@ -2,8 +2,8 @@ class Player {
     constructor() {
         this.alive = true
         this.pos = {
-            x:0,
-            y:0
+            x: start_pos.x,
+            y: start_pos.y,
         }
         this.vel = {
             x: 10,
@@ -103,7 +103,12 @@ class Player {
         this.vel.y = 0; // Reset vertical velocity
         this.alive = true; // Set alive state to true
         music.currentTime = 0
+		
     }
+}
+
+class Ufo extends Player {
+	jump()
 }
 
 class Block {
@@ -131,6 +136,9 @@ class Block {
         vtx.fillStyle = this.color
         vtx.fillRect(this.pos.x - 650, this.pos.y - 100, this.width, this.height)
     }
+	resetAttributes() {
+		
+	}
 }
 class FloorBlock extends Block {
     constructor({pos, color}) {
@@ -142,7 +150,6 @@ class FloorBlock extends Block {
         })
     }
     checkYCollision() {
-
         if (isColliding(this, P)) {
             if (P.fall_speed > 0) {
                 if (P.pos.y + P.height >= this.pos.y + this.height) {
@@ -231,19 +238,34 @@ class GoalBlock extends Block {
         }
     }
 }
+
 class PortalBlock extends Block {
-    constructor({pos, color}) {
+    constructor({pos, action, color}) {
         super({
             pos: pos,
             width: 80,
             height: 160,
             color: color,
         })
+		this.actions = {
+			"invertGravity": this.invertGravity,
+		}
+		this.actionOnTouch = this.actions[action]
     }
+	invertGravity() {
+		console.log(P.fall_speed)
+		if (P.fall_speed > 0) {
+			P.pos.y -= 3;
+		}
+		P.fall_speed *= -1
+	}
     checkYCollision() {
-        if (isColliding(this, P)) {
-            P.fall_speed *= -1
-            P.pos.y -= 3
+        if (isColliding(this, P) && !this.touched) {
+			this.actionOnTouch()
+			this.touched = true
         }
     }
+	resetAttributes() {
+		this.touched = false
+	}
 }

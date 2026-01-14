@@ -12,9 +12,9 @@ x Level Select!
 x Goal?
 x Harmonica music!
 x Complete color selection
-- Skins for coins!
-- Portals
+x Inverted gravity!!
 - FlappyBird?
+- Skins for coins!
 - Ship?
 - Coins?
 - Cookies for level completion!

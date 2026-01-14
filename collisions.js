@@ -13,7 +13,6 @@ function makeLevel(level) {
         y: 300,
     }
     const blocksData = TileMaps[level].layers[0].data;
-   
     for (let i = 0; i < blocksData.length; i += width) {
         blocksData2D.push(blocksData.slice(i, i + width))
     }
@@ -674,6 +673,7 @@ function makeLevel(level) {
                         width: block_size,
                         height: block_size*2,
                         color: "orange",
+						action: "invertGravity",
                     })
                 )
             } else if (value == 163) {

@@ -10,7 +10,7 @@ offset = {
 }
 const music = document.createElement("audio");
 
-const P = new Player()
+let P = new Player()
 const level_select = document.getElementById("level_select")
 loadLevel(level_select.selectedOptions[0])
 
@@ -33,7 +33,7 @@ function animate() {
 		vtx.fillStyle = "white"
         vtx.fillRect(0, 0, view.width, view.height);
         if (!P.alive) {
-            P.respawn(start_pos)
+            respawn()
         } else {
             P.update();
             vtx.save();
@@ -49,7 +49,7 @@ function animate() {
 function win() {
     alert('"Lowkey litt weird ass, bro" \n - Benjamin"')
     level_select.selectedOptions[0].style = "color: green"
-    P.respawn(start_pos)
+    respawn()
 }
 
 function loadLevel(selected_option) {
@@ -57,11 +57,17 @@ function loadLevel(selected_option) {
     makeLevel(level_to_load)
     music.src = "./snd/"+selected_option.value+".mp3";
     music.play(); 
-    P.respawn(start_pos)
+    respawn()
 }
 function enableFullscreen() {
 	view.requestFullscreen()
 }
+function respawn() {
+	P = new Player()
+	Blocks.forEach(Block => Block.resetAttributes());
+	music.currentTime = 0
+}
+
 window.addEventListener("keydown", (e) => {
     switch (event.key) {
         case "w":
