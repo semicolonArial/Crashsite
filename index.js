@@ -35,11 +35,14 @@ function animate() {
         if (!P.alive) {
             respawn()
         } else {
-            P.update();
+            P.grounded = false
             vtx.save();
                 vtx.translate(-P.pos.x + view.width / 2, -P.pos.y + view.height / 2);
                 Blocks.forEach(Block => Block.update());
             vtx.restore();
+            
+            P.update();
+            
 		}
     }
 
@@ -72,32 +75,36 @@ window.addEventListener("keydown", (e) => {
     switch (event.key) {
         case "w":
             P.input.press.jump = true
+            P.input.hold.jump = true
             break
         case " ":
             P.input.press.jump = true
+            P.input.hold.jump = true
             break
         case "ArrowUp":
             P.input.press.jump = true
+            P.input.hold.jump = true
             break
     }
 })
 window.addEventListener("keyup", (e) => {
     switch (event.key) {
         case "w":
-            P.input.press.jump = false
+            P.input.hold.jump = false
         case " ":
-            P.input.press.jump = false
+            P.input.hold.jump = false
             break
         case "ArrowUp":
-            P.input.press.jump = false
+            P.input.hold.jump = false
             break
     
     }
 })
 view.addEventListener("mousedown", (e) => {
     P.input.press.jump = true
+    P.input.hold.jump = true
 })
 view.addEventListener("mouseup", (e) => {
-    P.input.press.jump = false
+    P.input.hold.jump = false
 })
 

@@ -5,7 +5,6 @@ let start_pos = { x: null, y: null };
 function makeLevel(level) {
     blocksData2D = []
     Blocks = []
-    console.log(level)
     const width = TileMaps[level].width
     const block_size = 80
     offset = {
@@ -676,12 +675,50 @@ function makeLevel(level) {
 						action: "invertGravity",
                     })
                 )
+            } else if (value == 146) {
+                Blocks.push(
+                    new PortalBlock({
+                        pos: {
+                            x: x*block_size,
+                            y: y*block_size+offset.y-block_size
+                        },
+                        width: block_size,
+                        height: block_size*2,
+                        color: "green",
+						action: "setCube",
+                    })
+                )
+            } else if (value == 147) {
+                Blocks.push(
+                    new PortalBlock({
+                        pos: {
+                            x: x*block_size,
+                            y: y*block_size+offset.y-block_size
+                        },
+                        width: block_size,
+                        height: block_size*2,
+                        color: "blue",
+						action: "setUfo",
+                    })
+                )
+            } else if (value == 148) {
+                Blocks.push(
+                    new PortalBlock({
+                        pos: {
+                            x: x*block_size,
+                            y: y*block_size+offset.y-block_size
+                        },
+                        width: block_size,
+                        height: block_size*2,
+                        color: "cyan",
+						action: "setShip",
+                    })
+                )
             } else if (value == 163) {
                 start_pos = {
                     x: x*block_size,
                     y: y*block_size+offset.y
                 }
-                console.log(start_pos)
             } else if (value == 164) {
                 Blocks.push(
                     new GoalBlock({
@@ -696,5 +733,4 @@ function makeLevel(level) {
             }
         })
     })
-    console.log(blocksData2D)
 }
