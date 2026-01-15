@@ -35,14 +35,11 @@ function animate() {
         if (!P.alive) {
             respawn()
         } else {
-            P.grounded = false
+			P.update();
             vtx.save();
                 vtx.translate(-P.pos.x + view.width / 2, -P.pos.y + view.height / 2);
                 Blocks.forEach(Block => Block.update());
             vtx.restore();
-            
-            P.update();
-            
 		}
     }
 

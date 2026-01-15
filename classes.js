@@ -39,7 +39,6 @@ class Player {
         this.pos.y += this.vel.y
         this.pos.y = Math.round(this.pos.y);
         this.pos.x = Math.round(this.pos.x);
-        console.log(this.input.hold.jump)
         
     }
     rotate() {
@@ -53,11 +52,9 @@ class Player {
         this.pos.x += this.vel.x
     }
     jump(power=this.jump_power) {
-        if (this.grounded) {
-            if (this.fall_speed > 0) {
-                this.vel.y = -power
-            } else this.vel.y = power
-        }
+		if (this.fall_speed > 0) {
+			this.vel.y = -power
+		} else this.vel.y = power
     }
     fall() {
         if (this.fall_speed > 0) {
@@ -78,7 +75,7 @@ class Player {
         vtx.restore();
     }
     handleInput() {
-        if (this.input.press.jump){
+        if (this.input.press.jump && this.grounded){
             this.jump()
             this.input.press.jump = false
         }
@@ -173,6 +170,9 @@ class Block {
         vtx.fillStyle = this.color
         vtx.fillRect(this.pos.x - 650, this.pos.y - 100, this.width, this.height)
     }
+	checkYCollision() {
+		
+	}
 	resetAttributes() {
 		
 	}
@@ -221,6 +221,7 @@ class PadBlock extends Block {
     checkYCollision() {
         if (isColliding(this, P)) {
             P.jump(this.jump_power)
+			console.log("jump!")
         }
     }
 }
@@ -254,6 +255,8 @@ class OrbBlock extends Block {
             if (P.input.press.jump) {
                 P.vel.y = 0
                 P.jump(this.jump_power)
+				console.log("jumP!!!")
+				P.input.press.jump = false
             }
             
         }
