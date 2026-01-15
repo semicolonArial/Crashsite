@@ -1,9 +1,9 @@
 class Player {
-    constructor(pos={x: start_pos.x, y: start_pos.y}) {
+    constructor(pos) {
         this.alive = true
         this.pos = {
-            x: start_pos.x, 
-            y: start_pos.y
+            x: pos.x,
+            y: pos.y
         }
         this.vel = {
             x: 10,
@@ -22,8 +22,8 @@ class Player {
         }
         this.fall_speed = 1.5
         this.max_fall_speed = 10
-        this.width = 80
-        this.height = 80
+        this.width = 79
+        this.height = 79
         this.grounded = false
         
         this.sprite = new Image()
@@ -36,25 +36,15 @@ class Player {
         this.fall()
         this.handleInput()
         this.grounded = false
-        this.pos.y += this.vel.y
         this.pos.y = Math.round(this.pos.y);
         this.pos.x = Math.round(this.pos.x);
         
     }
-    rotate() {
-        if (!this.grounded) {
-            this.degrees += 20
-        } else {
-            this.degrees = (Math.round(this.degrees / 90) * 90)
-        }
-    }
+    rotate() {}
+    handleInput() {}
     move() {
         this.pos.x += this.vel.x
-    }
-    jump(power=this.jump_power) {
-		if (this.fall_speed > 0) {
-			this.vel.y = -power
-		} else this.vel.y = power
+        this.pos.y += this.vel.y
     }
     fall() {
         if (this.fall_speed > 0) {
@@ -64,8 +54,6 @@ class Player {
             this.vel.y += this.fall_speed
             if (this.vel.y < -this.max_fall_speed) this.vel.y = -this.max_fall_speed
         }
-       
-        
     }
     draw() {
         vtx.save();
@@ -74,41 +62,38 @@ class Player {
             vtx.drawImage(this.sprite,-this.width/2, -this.height/2,  this.width, this.height)
         vtx.restore();
     }
-    handleInput() {
-        if (this.input.press.jump && this.grounded){
-            this.jump()
-            this.input.press.jump = false
-        }
-    }
-    debugSpeed() {
-        if (!this.start_time) {
-            this.start_time = performance.now()
-            this.start_x = this.pos.x
-        }
-        if (performance.now() - this.start_time > 1000) {
-            this.start_time = performance.now()
-            this.start_x = this.pos.x
-        }
-    }
-    respawn(pos) {
-        this.pos.x = pos.x
-        this.pos.y = pos.y// Reset to starting x position
-        this.vel.y = 0; // Reset vertical velocity
-        this.alive = true; // Set alive state to true
-        music.currentTime = 0
-		
-    }
 }
 class Cube extends Player{
     constructor(pos) {
-        super()
+        super(pos)
         this.sprite.src = "./img/ben.jpg"
-        this.pos = pos
+    }
+    rotate() {
+        if (!this.grounded) {
+            this.degrees += 20
+        } else {
+            this.degrees = (Math.round(this.degrees / 90) * 90)
+        }
+    }
+    jump(power, forced) {
+        if (this.grounded || forced) {
+            if (this.fall_speed > 0) {
+                this.vel.y = -power
+            } else this.vel.y = power
+            P.input.press.jump = false
+        }
+    }
+    handleInput() {
+        if (this.input.press.jump) {
+            if (this.grounded) {
+                this.jump(this.jump_power, false)
+            }
+        }
     }
 }
 class Ufo extends Player {
     constructor(pos) {
-        super()
+        super(pos)
         this.sprite.src = "./img/ufo.jpg"
         this.pos = pos
         this.jump_power = 20
@@ -121,16 +106,13 @@ class Ufo extends Player {
     handleInput() {
         if (this.input.press.jump){
             this.jump()
-            this.input.press.jump = false
+            P.input.press.jump = false
         }
-    }
-    rotate() {
-        
     }
 }
 class Ship extends Player {
     constructor(pos) {
-        super()
+        super(pos)
         this.sprite.src = "./img/ship.jpg"
         this.pos = pos
         this.jump_power = 7
@@ -144,19 +126,19 @@ class Ship extends Player {
     handleInput() {
         if (this.input.hold.jump){
             this.jump()
+            P.input.press.jump = false
         }
-    }
-    rotate() {
-        
-    }
+    } 
 }
 
 class Block {
-    constructor({pos, width, height, color}) {
+    constructor({pos, width, height, color, collision, layer}) {
         this.pos = pos
         this.width = width
         this.height = height
         this.color = color
+        this.collision = collision
+        this.layer = layer
     }
     isVisible() {
         return (
@@ -168,7 +150,9 @@ class Block {
     }
     update() {
         if (this.isVisible()) {
-            this.checkYCollision()
+            if (this.collision) {
+                this.checkYCollision()
+            }
             this.draw()
         }
     }
@@ -184,12 +168,14 @@ class Block {
 	}
 }
 class FloorBlock extends Block {
-    constructor({pos, color}) {
+    constructor({pos, color, collision, layer}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
             color: color,
+            collision: collision,
+            layer: layer,
         })
     }
     checkYCollision() {
@@ -215,29 +201,32 @@ class FloorBlock extends Block {
     }
 }
 class PadBlock extends Block {
-    constructor({pos, jump_power, color}) {
+    constructor({pos, jump_power, color, collision, layer}) {
         super({
             pos: pos,
             width: 80,
             height: 20,
             color: color,
+            collision: collision,
+            layer: layer,
         })
         this.jump_power = jump_power
     }
     checkYCollision() {
         if (isColliding(this, P)) {
-            P.jump(this.jump_power)
-			console.log("jump!")
+            P.jump(this.jump_power, true)
         }
     }
 }
 class SpikeBlock extends Block {
-    constructor({pos, color}) {
+    constructor({pos, color, collision, layer}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
             color: color,
+            collision: collision,
+            layer: layer,
         })
     }
     checkYCollision() {
@@ -247,34 +236,40 @@ class SpikeBlock extends Block {
     }
 }
 class OrbBlock extends Block {
-    constructor({pos, jump_power, color}) {
+    constructor({pos, jump_power, color, collision, layer}) {
         super({
             pos: pos,
-            width: 40,
-            height: 40,
+            width: 80,
+            height: 80,
             color: color,
+            collision: collision,
+            layer: layer,
         })
+        
         this.jump_power = jump_power
+    }
+    draw() {
+        vtx.fillStyle = this.color
+        vtx.fillRect(this.pos.x - 650, this.pos.y - 100, this.width/2, this.height/2)
     }
     checkYCollision() {
         if (isColliding(this, P)) {
             if (P.input.press.jump) {
                 P.vel.y = 0
-                P.jump(this.jump_power)
-				console.log("jumP!!!")
-				P.input.press.jump = false
+                P.jump(this.jump_power, true)
             }
-            
         }
     }
 }
 class GoalBlock extends Block {
-    constructor({pos}) {
+    constructor({pos, collision, layer}) {
         super({
             pos: pos,
             width: 80,
             height: 80,
             color: "green",
+            collision: collision,
+            layer: layer,
         })
     }
     checkYCollision() {
@@ -284,12 +279,14 @@ class GoalBlock extends Block {
     }
 }
 class PortalBlock extends Block {
-    constructor({pos, action, color}) {
+    constructor({pos, action, color, collision, layer}) {
         super({
             pos: pos,
             width: 80,
             height: 160,
             color: color,
+            collision: collision,
+            layer: layer,
         })
 		this.actions = {
 			"invertGravity": this.invertGravity,

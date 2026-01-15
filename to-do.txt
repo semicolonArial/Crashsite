@@ -13,7 +13,10 @@ x Goal?
 x Harmonica music!
 x Complete color selection
 x Inverted gravity!!
-- Add myself and olavbåt
+x re-do forms
+x background color!
+x Add myself and olavbåt
+- re-do gravity
 - Skins for coins!
 - Coins?
 - Cookies for level completion!
