@@ -118,6 +118,12 @@ class Ufo extends Player {
             this.vel.y = -power
         } else this.vel.y = power
     }
+    handleInput() {
+        if (this.input.press.jump){
+            this.jump()
+            this.input.press.jump = false
+        }
+    }
     rotate() {
         
     }
